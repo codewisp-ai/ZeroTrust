@@ -1,0 +1,4 @@
+bin/
+*.exe
+report.html
+.zerotrust-cache.kv
