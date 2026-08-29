@@ -31,3 +31,24 @@ func TestParseNPM(t *testing.T) {
 		t.Errorf("lodahs missing or not marked as dev")
 	}
 }
+
+func TestParsePip(t *testing.T) {
+	path := filepath.Join("testdata", "requirements_sample.txt")
+	deps, err := manifest.ParsePip(path)
+	if err != nil {
+		t.Fatalf("ParsePip failed: %v", err)
+	}
+	if len(deps) != 3 {
+		t.Errorf("expected 3 dependencies in requirements_sample.txt, got %d", len(deps))
+	}
+
+	line1Name, line1Ver := manifest.ParsePipLine("requests==2.31.0")
+	if line1Name != "requests" || line1Ver != "==2.31.0" {
+		t.Errorf("parsePipLine requests failed: got %s, %s", line1Name, line1Ver)
+	}
+
+	line2Name, line2Ver := manifest.ParsePipLine("flask[async]>=2.0.0")
+	if line2Name != "flask" || line2Ver != ">=2.0.0" {
+		t.Errorf("parsePipLine extras failed: got %s, %s", line2Name, line2Ver)
+	}
+}

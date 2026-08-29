@@ -1,0 +1,5 @@
+# Sample requirements file
+requests==2.31.0
+flask[async]>=2.0.0
+# Comment line
+numpy~=1.24.0
