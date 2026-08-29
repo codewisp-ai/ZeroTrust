@@ -1,0 +1,6 @@
+# Clean Python requirements file
+requests==2.31.0
+flask>=2.3.3
+numpy~=1.26.0
+pandas>=2.1.0
+pytest>=7.4.0

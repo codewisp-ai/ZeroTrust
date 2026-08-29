@@ -1,0 +1,7 @@
+{
+  "name": "typosquat-sample",
+  "version": "1.0.0",
+  "dependencies": {
+    "reqeusts": "2.31.0"
+  }
+}
