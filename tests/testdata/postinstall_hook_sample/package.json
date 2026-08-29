@@ -1,0 +1,8 @@
+{
+  "name": "postinstall-sample",
+  "version": "1.0.0",
+  "scripts": {
+    "preinstall": "node preinstall.js",
+    "postinstall": "node postinstall.js"
+  }
+}
