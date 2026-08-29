@@ -62,3 +62,15 @@ func TestParseGoMod(t *testing.T) {
 		t.Errorf("expected 0 dependencies in root go.mod, got %d", len(deps))
 	}
 }
+
+func TestParseCargo(t *testing.T) {
+	name, ver := manifest.ParseCargoDependencyLine("serde = \"1.0.195\"")
+	if name != "serde" || ver != "1.0.195" {
+		t.Errorf("cargo simple line failed: got %s, %s", name, ver)
+	}
+
+	name2, ver2 := manifest.ParseCargoDependencyLine("tokio = { version = \"1.35.1\", features = [\"full\"] }")
+	if name2 != "tokio" || ver2 != "1.35.1" {
+		t.Errorf("cargo inline table failed: got %s, %s", name2, ver2)
+	}
+}
