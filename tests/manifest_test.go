@@ -52,3 +52,13 @@ func TestParsePip(t *testing.T) {
 		t.Errorf("parsePipLine extras failed: got %s, %s", line2Name, line2Ver)
 	}
 }
+
+func TestParseGoMod(t *testing.T) {
+	deps, err := manifest.ParseGoMod("../go.mod")
+	if err != nil {
+		t.Fatalf("ParseGoMod failed on root go.mod: %v", err)
+	}
+	if len(deps) != 0 {
+		t.Errorf("expected 0 dependencies in root go.mod, got %d", len(deps))
+	}
+}
