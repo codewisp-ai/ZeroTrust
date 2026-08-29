@@ -1,0 +1,3 @@
+track = "E"
+secondary_tracks = ["A", "D"]
+pitch = "Zero-dependency CLI that detects AI-hallucinated packages, typosquats, and malware-shaped install behavior in any project's manifest — offline-first, live-verifiable on request."
