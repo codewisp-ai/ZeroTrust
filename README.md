@@ -15,6 +15,12 @@ Every `npm install` is a small act of faith — a promise that the code you're a
 
 ---
 
+## Contents
+
+[What it does](#what-it-actually-does) · [What it doesn't](#what-it-explicitly-does-not-do) · [Quick start](#quick-start) · [For judges — verify in 2 minutes](#for-judges--verify-everything-in-under-2-minutes) · [Usage](#usage) · [Example](#example-catching-a-supply-chain-attack) · [Architecture](#architecture) · [Zero-dependency proof](#zero-dependency-proof) · [Reproducible builds](#reproducible-builds) · [Concurrency](#concurrency-model) · [Testing](#testing) · [Bonuses claimed](#bonus-challenges-claimed) · [Why modular](#why-this-is-modular-not-a-single-file) · [Limitations](#known-limitations) · [License](#license) · [Team](#team)
+
+---
+
 ## What it actually does
 
 Point ZeroTrust at a project and it runs five independent checks, entirely offline by default:
@@ -35,28 +41,62 @@ ZeroTrust is a heuristic pattern-matcher and manifest auditor, not magic. It doe
 
 ## Quick start
 
+### Prerequisites
+
+Go 1.22 or later. That's the entire dependency list — for the tool itself, and for building it.
+
+### Build & run
+
 ```bash
 git clone https://github.com/codewisp-ai/ZeroTrust.git
 cd ZeroTrust
 make build
-./bin/zerotrust --path ./tests/testdata/
 ```
 
-That's the whole setup. No `npm install`, no `pip install`, no lockfile to resolve first — this tool takes its own advice.
+### Run
 
-### Usage
+```bash
+# Linux / macOS
+./bin/zerotrust --path ./tests/testdata/
+
+# Windows
+.\bin\zerotrust.exe --path .\tests\testdata\
+```
+
+No `make` on your system (common on stock Windows without WSL or Git Bash)? Build directly instead:
+
+```bash
+go build -trimpath -buildvcs=false -o ./bin/zerotrust .
+```
+
+Either way, that's the whole setup. No `npm install`, no `pip install`, no lockfile to resolve first — this tool takes its own advice. Verified building and passing its full test suite on both **Windows** and **Linux** (the latter independently, on every push, via GitHub Actions' `ubuntu-latest` runners — see the CI badge above).
+
+### For judges — verify everything in under 2 minutes
+
+```bash
+go version                                          # confirm Go 1.22+
+go list -m all                                      # → zerotrust  (zero third-party deps)
+go build -trimpath -buildvcs=false -o ./bin/zerotrust .   # builds in one step, no install
+go test ./... -v -race                              # 15 tests, race-free
+go vet ./... && gofmt -s -l .                        # both silent = clean
+./bin/zerotrust --path ./tests/testdata/malicious_package.json   # watch it catch a real attack pattern
+```
+
+If all six of those run clean, you've independently confirmed everything this README claims.
+
+## Usage
 
 ```
 Usage of zerotrust:
-  -path string     Path to project manifest file or directory to scan (default ".")
-  -live             Opt-in live HTTP verification against official registries (default: offline-first)
-  -format string    Output format: text, json, sarif (default "text")
-  -fail-on string   Minimum finding severity to trigger exit code 1: low, medium, high, none (default "low")
-  -html string      Generate a static HTML report at the given path
-  -threshold float  Shannon entropy threshold in bits/byte (default 7.2)
-  -workers int      Concurrent worker goroutines (default 4)
-  -no-color         Disable ANSI color output
-  -version          Print version metadata and exit
+  -path string      Path to project manifest file or directory to scan (default ".")
+  -live              Opt-in live HTTP verification against official registries (default: offline-first)
+  -format string     Output format: text, json, sarif (default "text")
+  -fail-on string    Minimum finding severity to trigger exit code 1: low, medium, high, none (default "low")
+  -html string       Generate a static HTML report at the given path
+  -threshold float   Shannon entropy threshold in bits/byte (default 7.2)
+  -workers int       Concurrent worker goroutines (default 4)
+  -no-color          Disable ANSI color output
+  -version           Print version metadata and exit
 ```
 
 Every flag also has a short alias (`-p`, `-l`, `-f`, `-t`, `-w`, `-o`, `-v`) for fast CLI use.
@@ -96,6 +136,7 @@ Run it against a clean project and it stays quiet — zero findings, exit code 0
 ```bash
 ./bin/zerotrust --path . --format sarif > results.sarif   # for GitHub Code Scanning
 ./bin/zerotrust --path . --fail-on high                    # gate on severity, not just presence
+./bin/zerotrust --path . --html report.html                 # static HTML report for humans
 ```
 
 ## Architecture
@@ -144,9 +185,8 @@ Build 1 SHA256 (windows): D112B856931D9473E5DF7EC6175E4412FA8D0CE8F76FAF5AE7E6C0
 Build 2 SHA256 (windows): D112B856931D9473E5DF7EC6175E4412FA8D0CE8F76FAF5AE7E6C0438ACB1E9E
 REPRODUCIBLE BUILD VERIFICATION: PASS
 ```
-Built with -buildvcs=false alongside -trimpath so the binary hash reflects only source code, not git commit metadata — the hash above will remain stable across documentation-only commits.
 
-Achieved via `-trimpath -ldflags="-buildid= -s -w"`, stripping build paths and metadata so identical source always produces an identical binary. The same flags and target produce deterministic output on Linux as well; CI (`.github/workflows/test.yml`) builds and verifies this on every push using GitHub's `ubuntu-latest` runners.
+Achieved via `-trimpath -buildvcs=false -ldflags="-buildid= -s -w"` — stripping build paths, git VCS metadata, and build IDs so identical source always produces an identical binary, and so the hash stays stable across documentation-only commits rather than shifting on every push. The same flags and target produce deterministic output on Linux as well; CI (`.github/workflows/test.yml`) builds and verifies this on every push using GitHub's `ubuntu-latest` runners.
 
 ## Concurrency model
 
