@@ -139,10 +139,11 @@ make verify-reproducible
 ```
 
 ```
-Build 1 SHA256 (windows): 33EF3EFE4AD4D5032C16D9A40174B5C0EC5FB13E1599FF87C3AD8939A394134B
-Build 2 SHA256 (windows): 33EF3EFE4AD4D5032C16D9A40174B5C0EC5FB13E1599FF87C3AD8939A394134B
+Build 1 SHA256 (windows): D112B856931D9473E5DF7EC6175E4412FA8D0CE8F76FAF5AE7E6C0438ACB1E9E
+Build 2 SHA256 (windows): D112B856931D9473E5DF7EC6175E4412FA8D0CE8F76FAF5AE7E6C0438ACB1E9E
 REPRODUCIBLE BUILD VERIFICATION: PASS
 ```
+Built with -buildvcs=false alongside -trimpath so the binary hash reflects only source code, not git commit metadata — the hash above will remain stable across documentation-only commits.
 
 Achieved via `-trimpath -ldflags="-buildid= -s -w"`, stripping build paths and metadata so identical source always produces an identical binary. The same flags and target produce deterministic output on Linux as well; CI (`.github/workflows/test.yml`) builds and verifies this on every push using GitHub's `ubuntu-latest` runners.
 
