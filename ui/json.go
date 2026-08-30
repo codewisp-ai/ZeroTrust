@@ -233,7 +233,7 @@ func RenderSARIFReport(report *detect.AuditReport, w io.Writer) error {
 					Driver: SarifDriver{
 						Name:           "ZeroTrust",
 						Version:        "1.0.0",
-						InformationURI: "https://github.com/zerotrust/zerotrust",
+						InformationURI: "https://github.com/codewisp-ai/ZeroTrust",
 						Rules:          rules,
 					},
 				},
