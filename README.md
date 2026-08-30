@@ -7,6 +7,7 @@
 [![Go](https://img.shields.io/badge/Go-1.22-00ADD8)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Team](https://img.shields.io/badge/Team-Empty%20Manifesto-lightgrey)](#)
+[![CI](https://github.com/codewisp-ai/ZeroTrust/actions/workflows/test.yml/badge.svg)](https://github.com/codewisp-ai/ZeroTrust/actions)
 
 Every `npm install` is a small act of faith — a promise that the code you're about to run is what its name says it is. In September 2025 that faith cost the maintainers of `chalk` and `debug` their npm accounts, and cost their 2.6 billion combined weekly downloads a crypto-clipper hiding in memory. Days later, Shai-Hulud proved a worm could republish itself into hundreds of packages before anyone noticed. In 2024, a single volunteer maintainer of `xz` came within one code review of shipping a backdoor to every Linux server on earth. And today, AI coding assistants hallucinate package names that don't exist **19.7% of the time** — names attackers now pre-register and wait for, so the victim never even makes a typo. The machine makes it for them.
 
